@@ -3,6 +3,7 @@ package com.backend.bookManagementSystem.book.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,29 +34,58 @@ public class BookManagementController {
     }
 
     @CrossOrigin
-    @ResponseStatus(code = HttpStatus.CREATED)
+//    @ResponseStatus(code = HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, value = "/book")
-    public void addBook(@RequestBody Book book) {
-        bookManagementService.addBook(book);
+    public String addBook(@RequestBody Book book) throws Exception {
+        try {
+            boolean result = bookManagementService.addBook(book);
+            if (result == false) {
+                throw new AlreadyExistsBookException();
+            }
+            return "Book is added Successfully.";
+        }catch (AlreadyExistsBookException ex){
+//            return "Cannot add book: "+ex.getMessage();
+
+            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, "Book Not Found", ex);
+        }
+
     }
 
     @CrossOrigin
     @ResponseStatus(code = HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.PUT, value = "/book/{code}")
-    public void updateBook(@RequestBody Book book, @PathVariable long code) throws Exception {
+    public String updateBook(@RequestBody Book book, @PathVariable long code) throws Exception {
+        try {
         boolean result = bookManagementService.updateBook(code, book);
         if (result == false) {
-            throw new Exception("no book found to update book_code : " + code);
+            throw new AlreadyExistsBookException();
         }
+            return "Book is updated Successfully.";
+        }catch (AlreadyExistsBookException ex){
+//            return "Cannot add book: "+ex.getMessage();
+
+            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, "Book Not Found", ex);
+        }
+
 
     }
 
     @CrossOrigin
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     @RequestMapping(method = RequestMethod.DELETE, value = "/book/{code}")
-    public void deleteBook(@PathVariable long code) {
-        System.out.println(code);
-        bookManagementService.deleteBook(code);
+    public String  deleteBook(@PathVariable long code) {
+        try {
+            boolean result = bookManagementService.deleteBook(code);
+            if (result == false) {
+                throw new AlreadyAcceptedBookException();
+            }
+            return "Book is deleted Successfully.";
+        }catch (AlreadyAcceptedBookException ex){
+//            return "Cannot add book: "+ex.getMessage();
+
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "Book Not Found", ex);
+        }
+
 
     }
 
@@ -66,6 +96,17 @@ public class BookManagementController {
         return bookManagementService.getBookIds();
 
     }
+
+    @ResponseStatus(code = HttpStatus.ALREADY_REPORTED, reason = "Book already exists")
+    public class AlreadyExistsBookException extends Exception {
+
+    }
+
+    @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "Book already accepted")
+    public class AlreadyAcceptedBookException extends Exception {
+
+    }
+
 
 
 }

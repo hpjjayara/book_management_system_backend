@@ -36,14 +36,15 @@ public class BookManagementService {
     }
 
 
-    public void addBook(Book book) {
+    public boolean addBook(Book book) {
         String newBookName = book.getName();
         Book oldBook = bookRepository.findByName(newBookName);
 
         if (oldBook != null && oldBook.getName().equals(book.getName())){
-                return;
+                return false;
         }
         bookRepository.save(book);
+        return true;
 
     }
 
@@ -58,11 +59,13 @@ public class BookManagementService {
     }
 
 
-    public void deleteBook(long code) {
+    public boolean deleteBook(long code) {
         Book oldBook = bookRepository.findById(code).orElse(null);
         if (oldBook != null && oldBook.getCode() == code) {
             bookRepository.deleteById(code);
+            return true;
         }
+        return false;
     }
 
 
