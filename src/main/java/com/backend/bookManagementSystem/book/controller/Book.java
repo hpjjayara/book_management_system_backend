@@ -20,7 +20,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long code;
     private String name;
-    //    private String author;
+    private String authorName;
     @Column(length = 1000, nullable = false)
     private String description;
     private int stockCount;
@@ -33,12 +33,21 @@ public class Book {
 
     }
 
-    public Book(long code, String name, String description, int stockCount, long authorId) {
+//    public Book(long code, String name, String description, int stockCount, long authorId) {
+//        this.code = code;
+//        this.name = name;
+//        this.description = description;
+//        this.stockCount = stockCount;
+////        this.author = authorId;
+//    }
+
+
+    public Book(long code, String name, String authorName, String description, int stockCount, long authorId) {
         this.code = code;
         this.name = name;
+        this.authorName = authorName;
         this.description = description;
         this.stockCount = stockCount;
-//        this.author = authorId;
     }
 
     public long getCode() {
@@ -57,6 +66,13 @@ public class Book {
         this.name = name;
     }
 
+    public String getAuthor() {
+        return authorName;
+    }
+
+    public void setAuthor(String author) {
+        this.authorName = author;
+    }
 
     public String getDescription() {
         return description;

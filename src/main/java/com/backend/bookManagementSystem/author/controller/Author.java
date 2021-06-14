@@ -5,19 +5,15 @@
  */
 package com.backend.bookManagementSystem.author.controller;
 
-import com.backend.bookManagementSystem.book.controller.Book;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+
 
 @Entity
 @Table(name = "author")
 public class Author {
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
